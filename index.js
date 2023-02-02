@@ -1,0 +1,44 @@
+require("dotenv").config();
+
+const express = require('express');
+const { default: mongoose } = require('mongoose');
+
+const adressRouter = require('./routes/adressRoutes');
+const buyerRouter = require('./routes/buyerRoutes');
+const categoryRouter = require('./routes/categoryRoutes');
+const orderRouter = require('./routes/orderRoutes');
+const userRouter = require('./routes/userRoutes');
+
+const PORT = process.env.PORT || 8080;
+var cors = require("cors");
+
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(cors());
+
+const mongoDbUser = process.env.mongoDbUser;
+const mongoDbPassword = process.env.mongoDbPassword;
+
+mongoose.set("strictQuery", true);
+mongoose.connect(`mongodb+srv://${mongoDbUser}:${mongoDbPassword}@cluster0.klz9ll1.mongodb.net/RelativeApp`)
+    .then(res => {
+        console.log('Connect!');
+    })
+    .catch(err => {
+        console.log('err', err);
+    })
+
+app.use('/api/addresses', adressRouter);
+app.use('/api/buyers', buyerRouter);
+app.use('/api/categories', categoryRouter);
+app.use('/api/orders', orderRouter);
+app.use('/auth/login', userRouter);
+
+app.get('/', function (req, res) {
+    res.json("Hello");
+})
+
+app.listen(PORT);
