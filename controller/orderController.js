@@ -2,7 +2,28 @@ const { order } = require("../models/Order");
 
 const orderController = {
     getAll: (req, res) => {
-        order.find({ isDeleted: false }).populate('categoryId')
+        let { limit, sort, startDate, endDate } = req.query;
+        if (!startDate) {
+            startDate = new Date(0);
+        } else {
+            startDate = new Date(startDate);
+        }
+
+        if (!endDate) {
+            endDate = new Date();
+        } else {
+            endDate = new Date(endDate);
+        }
+        order.find({
+            isDeleted: false,
+            date: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        })
+            .limit(limit)
+            .sort({ productPrice: sort })
+            .populate('categoryId')
             .populate({ path: "buyerId", populate: { path: 'buyerAdress' } })
             .exec((err, docs) => {
                 if (!err) {
@@ -48,7 +69,7 @@ const orderController = {
     },
     delete: (req, res) => {
         let id = req.params.id;
-        order.findByIdAndUpdate(id, {isDeleted:true}, { new: true }, (err, doc) => {
+        order.findByIdAndUpdate(id, { isDeleted: true }, { new: true }, (err, doc) => {
             if (!err) {
                 res.json(doc)
             } else {
