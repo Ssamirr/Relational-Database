@@ -52,7 +52,9 @@ const userController = {
         })
     },
     sendEmail: (req, res) => {
-        let { mail, text } = req.query
+        
+        const { mail, text } = req.query
+
         let mailOptions = {
             from: MAIL_USER,
             to: mail,
@@ -62,7 +64,7 @@ const userController = {
 
         transporter.sendMail(mailOptions, function (err, data) {
             if (err) {
-                console.log("Err", err);
+                res.status(500).json(err);
             } else {
                 res.json("Mail is successfully sent")
             }
