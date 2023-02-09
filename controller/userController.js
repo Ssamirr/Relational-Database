@@ -5,9 +5,6 @@ const nodemailer = require('nodemailer')
 const MAIL_USER = process.env.MAIL_USER;
 const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 
-console.log(MAIL_USER)
-console.log(MAIL_PASSWORD)
-
 const transporter = nodemailer.createTransport({
     direct: true,
     host: 'smtp.gmail.com',
@@ -48,27 +45,29 @@ const userController = {
                 });
                 res.json({ 'token': token })
 
-                let mailOptions = {
-                    from: MAIL_USER,
-                    to: doc.userName,
-                    subject: 'Welcome',
-                    text: 'Hello'
-                };
-
-                transporter.sendMail(mailOptions, function (err, data) {
-                    if (err) {
-                        console.log("Err", err);
-                    } else {
-                        console.log("Success", data);
-                    }
-                });
-
             }
             else {
                 res.status(500).json(err)
             }
         })
     },
+    sendEmail: (req, res) => {
+        let { mail, text } = req.query
+        let mailOptions = {
+            from: MAIL_USER,
+            to: mail,
+            subject: 'Welcome',
+            text: text
+        };
+
+        transporter.sendMail(mailOptions, function (err, data) {
+            if (err) {
+                console.log("Err", err);
+            } else {
+                res.json("Mail is successfully sent")
+            }
+        });
+    }
 }
 
 module.exports = {
