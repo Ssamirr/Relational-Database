@@ -5,6 +5,9 @@ const nodemailer = require('nodemailer')
 const MAIL_USER = process.env.MAIL_USER;
 const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 
+console.log(MAIL_USER)
+console.log(MAIL_PASSWORD)
+
 const transporter = nodemailer.createTransport({
     direct: true,
     host: 'smtp.gmail.com',
@@ -46,7 +49,7 @@ const userController = {
                 res.json({ 'token': token })
 
                 let mailOptions = {
-                    from: 'ssardarlisamir@gmail.com',
+                    from: MAIL_USER,
                     to: doc.userName,
                     subject: 'Welcome',
                     text: 'Hello'
