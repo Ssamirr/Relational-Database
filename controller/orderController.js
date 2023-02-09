@@ -2,23 +2,23 @@ const { order } = require("../models/Order");
 
 const orderController = {
     getAll: (req, res) => {
-        let { limit, sort, startDate, endDate } = req.query;
-        if (!startDate) {
-            startDate = new Date(0);
+        let { limit, sort, startdate, enddate } = req.query;
+        if (!startdate) {
+            startdate = new Date(0);
         } else {
-            startDate = new Date(startDate);
+            startdate = new Date(startdate);
         }
 
-        if (!endDate) {
-            endDate = new Date();
+        if (!enddate) {
+            enddate = new Date();
         } else {
-            endDate = new Date(endDate);
+            enddate = new Date(enddate);
         }
         order.find({
             isDeleted: false,
             date: {
-                $gte: startDate,
-                $lte: endDate
+                $gte: startdate,
+                $lte: enddate
             }
         })
             .limit(limit)
