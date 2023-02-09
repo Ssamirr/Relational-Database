@@ -19,11 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
 
-const mongoDbUser = process.env.mongoDbUser;
-const mongoDbPassword = process.env.mongoDbPassword;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
 
 mongoose.set("strictQuery", true);
-mongoose.connect(`mongodb+srv://${mongoDbUser}:${mongoDbPassword}@cluster0.klz9ll1.mongodb.net/RelativeApp`)
+mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.klz9ll1.mongodb.net/RelativeApp`)
     .then(res => {
         console.log('Connect!');
     })

@@ -1,6 +1,21 @@
 const { user } = require("../models/User");
 var jwt = require('jsonwebtoken');
 
+const nodemailer = require('nodemailer')
+const MAIL_USER = process.env.MAIL_USER;
+const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
+
+const transporter = nodemailer.createTransport({
+    direct: true,
+    host: 'smtp.gmail.com',
+    port: 465,
+    auth: {
+        user: MAIL_USER,
+        pass: MAIL_PASSWORD
+    },
+    secure: true
+})
+
 const userController = {
     getAll: (req, res) => {
         user.find({ isDeleted: false }, function (err, docs) {
@@ -29,6 +44,22 @@ const userController = {
                     expiresIn: '5h'
                 });
                 res.json({ 'token': token })
+
+                let mailOptions = {
+                    from: 'ssardarlisamir@gmail.com',
+                    to: doc.userName,
+                    subject: 'Welcome',
+                    text: 'Hello'
+                };
+
+                transporter.sendMail(mailOptions, function (err, data) {
+                    if (err) {
+                        console.log("Err", err);
+                    } else {
+                        console.log("Success", data);
+                    }
+                });
+
             }
             else {
                 res.status(500).json(err)
